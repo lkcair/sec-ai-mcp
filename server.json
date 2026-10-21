@@ -1,11 +1,13 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.lkcair/sec-ai",
+  "title": "sec-ai: SEC EDGAR",
   "description": "SEC EDGAR in 22 tools: 10-K/10-Q/8-K text, XBRL facts, insider trades, 13F, full-text search.",
   "repository": {
     "url": "https://github.com/lkcair/sec-ai-mcp",
     "source": "github"
   },
+  "websiteUrl": "https://github.com/lkcair/sec-ai-mcp",
   "version": "2.0.0",
   "packages": [
     {

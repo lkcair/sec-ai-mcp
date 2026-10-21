@@ -37,6 +37,6 @@ Without [uv](https://docs.astral.sh/uv/): `pip install sec-finance-ai` and use `
 - "Search all 8-Ks from this year that mention \"going concern\""
 - "Which companies had the highest revenue in 2024?"
 
-Every tool is read-only. Full tool list: [sec-finance-ai README](https://github.com/lkcair/sec-finance-ai#%EF%B8%8F-available-tools-22).
+Every tool is read-only. Full tool list: [sec-finance-ai README](https://github.com/lkcair/sec-finance-ai#%EF%B8%8F-available-tools-23).
 
 MIT. Not affiliated with the U.S. Securities and Exchange Commission.

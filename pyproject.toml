@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sec-finance-ai"
+dynamic = ["version"]
+description = "MCP server and AI tool for SEC EDGAR: 22 tools for 10-K, 10-Q, 8-K, XBRL facts, insider trades, 13F and full-text search"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "lkcair" }]
+keywords = ["mcp", "sec", "edgar", "10-k", "xbrl", "finance", "llm", "ai-tools"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Office/Business :: Financial :: Investment",
+]
+dependencies = ["pandas>=2.2.0", "pydantic>=2.0.0", "requests>=2.28.0", "beautifulsoup4>=4.12.0", "lxml>=4.9.0", "python-dateutil>=2.8.0", "mcp>=2.1"]
+
+[project.urls]
+Repository = "https://github.com/lkcair/sec-ai-mcp"
+Source = "https://github.com/lkcair/sec-finance-ai"
+
+[project.scripts]
+sec-finance-ai = "sec_finance_ai_mcp:main"
+
+# sec_finance_ai.py is an exact copy of lkcair/sec-finance-ai (sync.sh); its header holds the version
+[tool.hatch.version]
+path = "sec_finance_ai.py"
+pattern = "^version: (?P<version>\\S+)$"
+
+[tool.hatch.build.targets.wheel]
+only-include = ["sec_finance_ai.py", "sec_finance_ai_mcp.py"]
+
+[tool.hatch.build.targets.sdist]
+only-include = ["sec_finance_ai.py", "sec_finance_ai_mcp.py", "README.md", "LICENSE", "server.json"]

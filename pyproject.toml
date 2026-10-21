@@ -24,7 +24,7 @@ Source = "https://github.com/lkcair/sec-finance-ai"
 [project.scripts]
 sec-finance-ai = "sec_finance_ai_mcp:main"
 
-# sec_finance_ai.py is an exact copy of lkcair/sec-finance-ai (sync.sh); its header holds the version
+# The version comes from the sec_finance_ai.py header
 [tool.hatch.version]
 path = "sec_finance_ai.py"
 pattern = "^version: (?P<version>\\S+)$"

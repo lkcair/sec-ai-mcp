@@ -12,7 +12,7 @@ AI-powered SEC EDGAR integration: 23 tools on the official sec.gov APIs, in one 
 
 | Use it in | Install | Repo |
 |---|---|---|
-| Claude, Cursor, VS Code and other MCP clients | `uvx sec-finance-ai@latest` | [sec-ai-mcp](https://github.com/lkcair/sec-ai-mcp) |
+| Claude, Cursor, VS Code, [LangChain](https://docs.langchain.com/oss/python/langchain/mcp), [Google ADK](https://google.github.io/adk-docs/tools-custom/mcp-tools/), [Strands Agents](https://strandsagents.com/docs/user-guide/sdk/tools/mcp-tools/) and other MCP clients | `uvx sec-finance-ai@latest` | [sec-ai-mcp](https://github.com/lkcair/sec-ai-mcp) |
 | ClawHub skill for OpenClaw 🚀 Thousands of downloads | `openclaw skills install @lkcair/sec` | [sec-ai-skill](https://github.com/lkcair/sec-ai-skill) |
 | OpenWebUI tool 🚀 Thousands of downloads | [Get it on openwebui.com](https://openwebui.com/posts/sec_finance_ai_data_pull_8e017585) | [sec-finance-ai](https://github.com/lkcair/sec-finance-ai) |
 | Python | `from sec_finance_ai import Tools` | [sec-finance-ai](https://github.com/lkcair/sec-finance-ai) |
@@ -54,6 +54,70 @@ Claude Desktop, Cursor, Windsurf and other clients, in the client's MCP config f
 `SEC_USER_AGENT` is the name and e-mail the SEC asks programs to send. If it is not set, a default is sent.
 
 Listed in the [MCP Registry](https://registry.modelcontextprotocol.io) as `io.github.lkcair/sec-ai`. Every tool is read-only.
+
+## Agent frameworks
+
+The server runs over stdio with `uvx sec-finance-ai@latest`, so any framework with MCP support can load all its tools.
+
+`SEC_USER_AGENT` is optional. MCP starts the server with a minimal environment, so pass it as shown; `**os.environ` keeps `PATH`, so `uvx` is found.
+
+[LangChain](https://docs.langchain.com/oss/python/langchain/mcp): `pip install "langchain[mcp]" langchain-anthropic`
+```python
+import asyncio
+import os
+from langchain.agents import create_agent
+from langchain.mcp import MCPAdapter
+
+async def main():
+    config = {"mcpServers": {"sec-ai": {
+        "command": "uvx", "args": ["sec-finance-ai@latest"],
+        "env": {**os.environ, "SEC_USER_AGENT": "Your Name you@example.com"},  # optional
+    }}}
+    async with MCPAdapter(config) as adapter:
+        tools = await adapter.list_tools()
+        agent = create_agent("claude-sonnet-5", tools)
+        result = await agent.ainvoke({"messages": [{"role": "user", "content": "What does Apple's latest 10-K say about Greater China?"}]})
+        print(result["messages"][-1].content)
+
+asyncio.run(main())
+```
+
+[Google ADK](https://google.github.io/adk-docs/tools-custom/mcp-tools/): `pip install "google-adk[mcp]"`
+```python
+import os
+from google.adk.agents import LlmAgent
+from google.adk.tools.mcp_tool import McpToolset
+from google.adk.tools.mcp_tool.mcp_session_manager import StdioConnectionParams
+from mcp import StdioServerParameters
+
+root_agent = LlmAgent(
+    model="gemini-flash-latest",
+    name="sec_ai",
+    instruction="Answer with the sec-ai tools.",
+    tools=[McpToolset(connection_params=StdioConnectionParams(
+        server_params=StdioServerParameters(
+            command="uvx", args=["sec-finance-ai@latest"],
+            env={**os.environ, "SEC_USER_AGENT": "Your Name you@example.com"},  # optional
+        ),
+        timeout=60,
+    ))],
+)
+```
+
+[Strands Agents](https://strandsagents.com/docs/user-guide/sdk/tools/mcp-tools/): `pip install strands-agents`
+```python
+import os
+from mcp import stdio_client, StdioServerParameters
+from strands import Agent
+from strands.tools.mcp import MCPClient
+
+sec_ai = MCPClient(lambda: stdio_client(StdioServerParameters(
+    command="uvx", args=["sec-finance-ai@latest"],
+    env={**os.environ, "SEC_USER_AGENT": "Your Name you@example.com"},  # optional
+)))
+agent = Agent(tools=[sec_ai])
+agent("What does Apple's latest 10-K say about Greater China?")
+```
 
 ## Example questions
 

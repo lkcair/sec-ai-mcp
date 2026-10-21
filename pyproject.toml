@@ -19,7 +19,7 @@ dependencies = ["pandas>=2.2.0", "pydantic>=2.0.0", "requests>=2.28.0", "beautif
 
 [project.urls]
 Repository = "https://github.com/lkcair/sec-ai-mcp"
-Source = "https://github.com/lkcair/sec-finance-ai"
+Homepage = "https://github.com/lkcair/sec-finance-ai"
 
 [project.scripts]
 sec-finance-ai = "sec_finance_ai_mcp:main"
